@@ -1,6 +1,7 @@
 import datetime
 import json
 import logging
+from socket import if_nameindex
 
 import websocket
 
@@ -50,16 +51,12 @@ def run():
     wsapp = websocket.WebSocketApp(
         url,
         on_message=on_message,
-        on_error=lambda ws, err: print(err),
-        on_close=lambda ws: print("Connection closed"),
-        on_open=lambda ws: print("Connection opened"),
+        on_error=lambda ws, err: logger.error(err),
+        on_close=lambda a, b, c: logger.info("Connection closed"),
+        on_open=lambda ws: logger.info("Connection opened"),
     )
-    wsapp.run_forever()
+    wsapp.run_forever(reconnect=0)
 
 
-def main():
-    while True:
-        try:
-            run()
-        except Exception as e:
-            logger.warning(e)
+if __name__ == "__main__":
+    run()
