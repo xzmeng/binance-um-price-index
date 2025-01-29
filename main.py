@@ -1,7 +1,7 @@
 import datetime
 import json
 import logging
-from socket import if_nameindex
+from logging.handlers import RotatingFileHandler
 
 import websocket
 
@@ -15,8 +15,10 @@ logging.basicConfig(
 # Create a logger
 logger = logging.getLogger(__name__)
 # Add a file handler to log to a file
-file_handler = logging.FileHandler(
-    f"logs/price-index-{datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S')}-UTC.log"
+file_handler = RotatingFileHandler(
+    f"logs/price-index-{datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d %H:%M:%S')}-UTC.log",
+    maxBytes=1024 * 1024,  # 1MB max file size
+    backupCount=1,  # Keep up to 5 backup files
 )
 file_handler.setFormatter(
     logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
